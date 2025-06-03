@@ -10,6 +10,9 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
+import CreateCoverLetter from "./pages/CreateCoverLetter";
+import CoverLetters from "./pages/CoverLetters";
+import Profile from "./pages/Profile";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +31,30 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/create-cover-letter" 
+              element={
+                <ProtectedRoute>
+                  <CreateCoverLetter />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/cover-letters" 
+              element={
+                <ProtectedRoute>
+                  <CoverLetters />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/profile" 
+              element={
+                <ProtectedRoute>
+                  <Profile />
                 </ProtectedRoute>
               } 
             />

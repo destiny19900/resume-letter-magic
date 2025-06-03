@@ -41,7 +41,7 @@ const Dashboard = () => {
               <span className="text-sm text-gray-600">
                 Welcome, {user?.email}
               </span>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" onClick={() => navigate("/profile")}>
                 <User className="w-4 h-4 mr-2" />
                 Profile
               </Button>
@@ -67,7 +67,10 @@ const Dashboard = () => {
 
         {/* Quick Actions */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          <Card className="p-6 border-gray-200 hover:border-blue-200 hover:shadow-lg transition-all duration-200 cursor-pointer">
+          <Card 
+            className="p-6 border-gray-200 hover:border-blue-200 hover:shadow-lg transition-all duration-200 cursor-pointer"
+            onClick={() => navigate("/create-cover-letter")}
+          >
             <div className="flex items-center space-x-4">
               <div className="bg-blue-100 p-3 rounded-lg">
                 <Plus className="w-6 h-6 text-blue-600" />
@@ -79,7 +82,10 @@ const Dashboard = () => {
             </div>
           </Card>
 
-          <Card className="p-6 border-gray-200 hover:border-blue-200 hover:shadow-lg transition-all duration-200 cursor-pointer">
+          <Card 
+            className="p-6 border-gray-200 hover:border-blue-200 hover:shadow-lg transition-all duration-200 cursor-pointer"
+            onClick={() => navigate("/cover-letters")}
+          >
             <div className="flex items-center space-x-4">
               <div className="bg-green-100 p-3 rounded-lg">
                 <FileText className="w-6 h-6 text-green-600" />
@@ -91,7 +97,10 @@ const Dashboard = () => {
             </div>
           </Card>
 
-          <Card className="p-6 border-gray-200 hover:border-blue-200 hover:shadow-lg transition-all duration-200 cursor-pointer">
+          <Card 
+            className="p-6 border-gray-200 hover:border-blue-200 hover:shadow-lg transition-all duration-200 cursor-pointer"
+            onClick={() => navigate("/profile")}
+          >
             <div className="flex items-center space-x-4">
               <div className="bg-purple-100 p-3 rounded-lg">
                 <User className="w-6 h-6 text-purple-600" />
@@ -110,7 +119,10 @@ const Dashboard = () => {
           <div className="text-center py-12">
             <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <p className="text-gray-600 mb-4">You haven't created any cover letters yet</p>
-            <Button className="bg-blue-600 hover:bg-blue-700">
+            <Button 
+              className="bg-blue-600 hover:bg-blue-700"
+              onClick={() => navigate("/create-cover-letter")}
+            >
               <Plus className="w-4 h-4 mr-2" />
               Create Your First Cover Letter
             </Button>
