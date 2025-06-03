@@ -1,12 +1,21 @@
 
-import { useState } from "react";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { FileText, Zap, Download, Shield } from "lucide-react";
-import AuthModal from "@/components/AuthModal";
+import { useAuth } from "@/hooks/useAuth";
 
 const Index = () => {
-  const [showAuthModal, setShowAuthModal] = useState(false);
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  // Redirect authenticated users to dashboard
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
 
   const features = [
     {
@@ -31,6 +40,10 @@ const Index = () => {
     }
   ];
 
+  const handleGetStarted = () => {
+    navigate("/auth");
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
       {/* Header */}
@@ -42,7 +55,7 @@ const Index = () => {
           </div>
           <Button 
             variant="outline" 
-            onClick={() => setShowAuthModal(true)}
+            onClick={() => navigate("/auth")}
             className="border-blue-200 text-blue-600 hover:bg-blue-50"
           >
             Sign In
@@ -65,7 +78,7 @@ const Index = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 
               size="lg" 
-              onClick={() => setShowAuthModal(true)}
+              onClick={handleGetStarted}
               className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
             >
               Get Started Free
@@ -156,7 +169,7 @@ const Index = () => {
           </p>
           <Button 
             size="lg" 
-            onClick={() => setShowAuthModal(true)}
+            onClick={handleGetStarted}
             className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
           >
             Start Creating Today
@@ -176,11 +189,6 @@ const Index = () => {
           </p>
         </div>
       </footer>
-
-      <AuthModal 
-        isOpen={showAuthModal} 
-        onClose={() => setShowAuthModal(false)} 
-      />
     </div>
   );
 };
