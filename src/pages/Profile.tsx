@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -10,6 +9,12 @@ import { User, ArrowLeft, Save } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import mammoth from "mammoth";
+import * as pdfjsLib from "pdfjs-dist/build/pdf";
+pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+  "pdfjs-dist/build/pdf.worker.js",
+  import.meta.url
+).toString();
 
 const Profile = () => {
   const { user } = useAuth();
@@ -20,7 +25,13 @@ const Profile = () => {
     email: "",
     address: "",
     phone_number: "",
+    cv_filename: "",
+    cv_content: "",
   });
+  const [cvFile, setCvFile] = useState<File | null>(null);
+  const [cvFilename, setCvFilename] = useState(profile.cv_filename || "");
+  const [cvUploading, setCvUploading] = useState(false);
+  const [cvContent, setCvContent] = useState(profile.cv_content || "");
 
   useEffect(() => {
     fetchProfile();
@@ -47,6 +58,8 @@ const Profile = () => {
         email: profileData?.email || user?.email || "",
         address: userProfileData?.address || "",
         phone_number: userProfileData?.phone_number || "",
+        cv_filename: userProfileData?.cv_filename || "",
+        cv_content: userProfileData?.cv_content || "",
       });
     } catch (error) {
       console.error('Error fetching profile:', error);
@@ -56,6 +69,19 @@ const Profile = () => {
   const handleSave = async () => {
     setLoading(true);
     try {
+      // Fetch latest cv_content if missing
+      let cv_content = profile.cv_content;
+      let cv_filename = profile.cv_filename;
+      if (!cv_content) {
+        const { data: userProfile } = await supabase
+          .from('user_profiles')
+          .select('cv_content, cv_filename')
+          .eq('user_id', user?.id)
+          .single();
+        cv_content = userProfile?.cv_content || "";
+        cv_filename = userProfile?.cv_filename || "";
+      }
+
       // Update profiles table
       const { error: profileError } = await supabase
         .from('profiles')
@@ -74,9 +100,18 @@ const Profile = () => {
           user_id: user?.id,
           address: profile.address,
           phone_number: profile.phone_number,
-        });
+          cv_filename,
+          cv_content,
+        }, { onConflict: 'user_id' });
 
-      if (userProfileError) throw userProfileError;
+      if (userProfileError) {
+        toast({
+          title: "Error",
+          description: userProfileError.message || "Failed to update profile.",
+          variant: "destructive",
+        });
+        throw userProfileError;
+      }
 
       toast({
         title: "Success",
@@ -84,14 +119,66 @@ const Profile = () => {
       });
     } catch (error) {
       console.error('Error updating profile:', error);
-      toast({
-        title: "Error",
-        description: "Failed to update profile. Please try again.",
-        variant: "destructive",
-      });
+      if (!error?.message?.includes('already shown')) {
+        toast({
+          title: "Error",
+          description: "Failed to update profile. Please try again.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleResumeUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    setCvUploading(true);
+    setCvFile(file);
+    setCvFilename(file.name);
+    let text = "";
+    if (file.type === "application/pdf") {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        text += content.items.map((item: any) => item.str).join(" ") + " ";
+      }
+    } else if (file.name.endsWith(".docx")) {
+      const arrayBuffer = await file.arrayBuffer();
+      const result = await mammoth.extractRawText({ arrayBuffer });
+      text = result.value;
+    } else {
+      text = await file.text();
+    }
+    setCvContent(text);
+    // Upload file to Supabase Storage
+    const fileName = `${user?.id}/${Date.now()}_${file.name}`;
+    await supabase.storage.from('cv-files').upload(fileName, file);
+    // Save to user_profiles
+    const { error: userProfileError } = await supabase.from('user_profiles').upsert({
+      user_id: user?.id,
+      cv_filename: file.name,
+      cv_content: text,
+    }, { onConflict: 'user_id' });
+    if (userProfileError) {
+      toast({
+        title: "Error",
+        description: userProfileError.message || "Failed to upload resume.",
+        variant: "destructive",
+      });
+      setCvUploading(false);
+      return;
+    }
+    setProfile((prev) => ({
+      ...prev,
+      cv_filename: file.name,
+      cv_content: text,
+    }));
+    setCvUploading(false);
+    toast({ title: "Success", description: "Resume uploaded and parsed!" });
   };
 
   return (
@@ -99,7 +186,7 @@ const Profile = () => {
       <header className="bg-white border-b border-gray-200">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center space-x-4">
-            <Button variant="outline" onClick={() => navigate("/dashboard")}>
+            <Button variant='outline' onClick={() => navigate("/dashboard")}>
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Dashboard
             </Button>
@@ -158,6 +245,31 @@ const Profile = () => {
                   placeholder="Enter your address"
                   className="min-h-[100px]"
                 />
+              </div>
+
+              <div>
+                <Label htmlFor="cv-upload">Resume (CV)</Label>
+                {cvFilename ? (
+                  <div className="mb-2">Uploaded: {cvFilename}</div>
+                ) : (
+                  <>
+                    <input
+                      id="cv-upload"
+                      type="file"
+                      accept=".pdf,.doc,.docx,.txt"
+                      onChange={handleResumeUpload}
+                      className="hidden"
+                    />
+                    <Button
+                      variant='outline'
+                      onClick={() => document.getElementById('cv-upload')?.click()}
+                      className="w-full"
+                      disabled={cvUploading}
+                    >
+                      {cvUploading ? "Uploading..." : "Upload Resume"}
+                    </Button>
+                  </>
+                )}
               </div>
 
               <Button onClick={handleSave} disabled={loading} className="w-full">

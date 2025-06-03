@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,6 +9,7 @@ import { FileText, ArrowLeft, Loader, Upload } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import jsPDF from "jspdf";
 
 const CreateCoverLetter = () => {
   const { user } = useAuth();
@@ -23,6 +23,15 @@ const CreateCoverLetter = () => {
   });
   const [cvFile, setCvFile] = useState<File | null>(null);
   const [generatedContent, setGeneratedContent] = useState("");
+  const [userProfile, setUserProfile] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      const { data } = await supabase.from('user_profiles').select('*').eq('user_id', user?.id).single();
+      setUserProfile(data);
+    };
+    if (user?.id) fetchUserProfile();
+  }, [user]);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -32,7 +41,7 @@ const CreateCoverLetter = () => {
   };
 
   const handleGenerate = async () => {
-    if (!formData.jobDescription || !cvFile) {
+    if (!formData.jobDescription || (!userProfile?.cv_content && !cvFile)) {
       toast({
         title: "Missing Information",
         description: "Please provide both a job description and upload your CV.",
@@ -43,15 +52,10 @@ const CreateCoverLetter = () => {
 
     setLoading(true);
     try {
-      // Read CV file content
-      const cvContent = await cvFile.text();
-
-      // Get user profile
-      const { data: userProfile } = await supabase
-        .from('user_profiles')
-        .select('*')
-        .eq('user_id', user?.id)
-        .single();
+      let cvContent = userProfile?.cv_content;
+      if (!cvContent && cvFile) {
+        cvContent = await cvFile.text();
+      }
 
       // Get user info from profiles table
       const { data: profile } = await supabase
@@ -151,6 +155,25 @@ const CreateCoverLetter = () => {
     }
   };
 
+  const handleDownloadPDF = () => {
+    const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+    const margin = 40;
+    let y = margin;
+    doc.setFont('helvetica', '');
+    doc.setFontSize(18);
+    doc.text(formData.title || 'Cover Letter', margin, y);
+    y += 30;
+    doc.setFontSize(12);
+    // Split the generated content into paragraphs for better formatting
+    const paragraphs = generatedContent.split(/\n{2,}/);
+    paragraphs.forEach((para) => {
+      const lines = doc.splitTextToSize(para.trim(), 500);
+      doc.text(lines, margin, y);
+      y += lines.length * 18 + 10;
+    });
+    doc.save(`${formData.title || 'cover-letter'}.pdf`);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white border-b border-gray-200">
@@ -206,26 +229,28 @@ const CreateCoverLetter = () => {
                 />
               </div>
 
-              <div>
-                <Label htmlFor="cv-upload">Upload Your CV/Resume</Label>
-                <div className="mt-2">
-                  <input
-                    id="cv-upload"
-                    type="file"
-                    accept=".pdf,.doc,.docx,.txt"
-                    onChange={handleFileUpload}
-                    className="hidden"
-                  />
-                  <Button
-                    variant="outline"
-                    onClick={() => document.getElementById('cv-upload')?.click()}
-                    className="w-full"
-                  >
-                    <Upload className="w-4 h-4 mr-2" />
-                    {cvFile ? cvFile.name : "Choose CV File"}
-                  </Button>
+              {!userProfile?.cv_content && (
+                <div>
+                  <Label htmlFor="cv-upload">Upload Your CV/Resume</Label>
+                  <div className="mt-2">
+                    <input
+                      id="cv-upload"
+                      type="file"
+                      accept=".pdf,.doc,.docx,.txt"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                    />
+                    <Button
+                      variant="outline"
+                      onClick={() => document.getElementById('cv-upload')?.click()}
+                      className="w-full"
+                    >
+                      <Upload className="w-4 h-4 mr-2" />
+                      {cvFile ? cvFile.name : "Choose CV File"}
+                    </Button>
+                  </div>
                 </div>
-              </div>
+              )}
 
               <div>
                 <Label htmlFor="job-description">Job Description</Label>
@@ -267,6 +292,7 @@ const CreateCoverLetter = () => {
                   <Button onClick={handleSave} className="w-full">
                     Save Cover Letter
                   </Button>
+                  <Button onClick={handleDownloadPDF} className="w-full mt-2">Download as PDF</Button>
                 </div>
               ) : (
                 <div className="text-center py-12 text-gray-500">

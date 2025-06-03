@@ -1,7 +1,8 @@
 import * as React from "react"
 import * as ToastPrimitives from "@radix-ui/react-toast"
 import { cva, type VariantProps } from "class-variance-authority"
-import { X } from "lucide-react"
+import { X, CheckCircle, AlertTriangle } from "lucide-react"
+import { motion, AnimatePresence } from 'framer-motion'
 
 import { cn } from "@/lib/utils"
 
@@ -43,13 +44,37 @@ const Toast = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> &
     VariantProps<typeof toastVariants>
 >(({ className, variant, ...props }, ref) => {
+  // Determine icon based on variant
+  let icon = null;
+  if (variant === 'destructive') {
+    icon = <AlertTriangle className="w-6 h-6 text-red-500 mr-3" />;
+  } else {
+    icon = <CheckCircle className="w-6 h-6 text-green-500 mr-3" />;
+  }
   return (
-    <ToastPrimitives.Root
-      ref={ref}
-      className={cn(toastVariants({ variant }), className)}
-      {...props}
-    />
-  )
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 20 }}
+        transition={{ duration: 0.3 }}
+      >
+        <ToastPrimitives.Root
+          ref={ref}
+          className={cn(
+            toastVariants({ variant }),
+            variant === 'destructive' ? 'border-red-500 bg-red-50 text-red-800' : 'border-green-500 bg-green-50 text-green-800',
+            'flex items-center',
+            className
+          )}
+          {...props}
+        >
+          {icon}
+          <div className="flex-1">{props.children}</div>
+        </ToastPrimitives.Root>
+      </motion.div>
+    </AnimatePresence>
+  );
 })
 Toast.displayName = ToastPrimitives.Root.displayName
 

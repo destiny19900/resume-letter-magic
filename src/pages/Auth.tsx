@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -65,6 +64,7 @@ const Auth = () => {
             title: "Success",
             description: "Account created! Please check your email to verify your account.",
           });
+          navigate("/profile");
         }
       }
     } catch (error) {

@@ -1,8 +1,9 @@
-
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+
+// Make sure to set OPENAI_API_KEY in your .env file for this function to work.
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -17,11 +18,21 @@ serve(async (req) => {
   try {
     const { jobDescription, cvContent, companyName, positionTitle, userProfile } = await req.json();
 
-    const prompt = `Generate a professional cover letter based on the following information:
+    const prompt = `You are an expert career coach and professional writer. Write a modern, highly professional, and compelling cover letter using the following information. The letter should:
+- Be tailored to the job and company
+- Use a confident, positive, and engaging tone
+- Follow current best practices in cover letter writing (2024)
+- Be well-structured with clear sections (greeting, introduction, body, closing, signature)
+- Use bullet points if appropriate for skills/achievements
+- Be formatted for easy reading and visual appeal
+- Avoid generic phrases and clichés
+- Be ready to send as a PDF
 
-Job Description: ${jobDescription}
+Job Description:
+${jobDescription}
 
-CV/Resume Content: ${cvContent}
+CV/Resume Content:
+${cvContent}
 
 Company Name: ${companyName}
 Position Title: ${positionTitle}
@@ -32,14 +43,7 @@ User Profile:
 - Phone: ${userProfile.phone_number || 'Not provided'}
 - Address: ${userProfile.address || 'Not provided'}
 
-Please create a compelling cover letter that:
-1. Addresses the specific requirements mentioned in the job description
-2. Highlights relevant experience and skills from the CV
-3. Shows enthusiasm for the role and company
-4. Maintains a professional tone
-5. Is properly formatted with appropriate sections
-
-The cover letter should be ready to send and specifically tailored to this job opportunity.`;
+Return only the cover letter content, no extra commentary.`;
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
