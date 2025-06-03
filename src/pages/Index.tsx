@@ -48,7 +48,7 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white flex flex-col items-center justify-center px-6">
       <motion.div initial={{ opacity: 0, y: -40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="w-full max-w-3xl text-center mb-12">
         <div className="mx-auto w-64 h-64 mb-6 flex items-center justify-center bg-blue-100 rounded-full overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1515168833906-d2a3b82b3029?auto=format&fit=crop&w=400&q=80" alt="Cover Letter Hero" className="w-64 h-64 object-cover" onError={e => e.currentTarget.style.display='none'} />
+          <img src="https://www.svgrepo.com/show/528343/letter-unread.svg" alt="Cover Letter Hero" className="w-64 h-64 object-cover" onError={e => e.currentTarget.style.display='none'} />
         </div>
         <h1 className="text-5xl font-extrabold text-blue-700 mb-4 drop-shadow-lg">Craft the Perfect Cover Letter</h1>
         <p className="text-xl text-gray-700 mb-6">AI-powered, beautiful, and tailored for your dream job. Make your application stand out with CoverCraft!</p>
