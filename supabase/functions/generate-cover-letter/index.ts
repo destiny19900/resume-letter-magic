@@ -18,15 +18,19 @@ serve(async (req) => {
   try {
     const { jobDescription, cvContent, companyName, positionTitle, userProfile } = await req.json();
 
-    const prompt = `You are an expert career coach and professional writer. Write a modern, highly professional, and compelling cover letter using the following information. The letter should:
-- Be tailored to the job and company
-- Use a confident, positive, and engaging tone
-- Follow current best practices in cover letter writing (2024)
-- Be well-structured with clear sections (greeting, introduction, body, closing, signature)
+    const prompt = `You are an expert career coach and professional writer. Write a concise, highly tailored, and persuasive cover letter using the information below. The letter should:
+- Be laser-focused on the specific job and company, making the candidate seem like a perfect fit
+- Strongly connect the candidate's experience and skills to the position, even exaggerating alignment if needed
+- Highlight only the most relevant achievements and skills for this job
+- Be no longer than 250 words (short, punchy, and memorable)
+- Use a confident, enthusiastic, and proactive tone
+- Avoid generic phrases, clichés, and unnecessary background
+- Make the candidate stand out as the ideal hire for this role
+- Use a modern, visually appealing structure (greeting, intro, body, closing, signature)
+- Return only the cover letter content, no extra commentary
+- Use a professional and engaging tone
 - Use bullet points if appropriate for skills/achievements
 - Be formatted for easy reading and visual appeal
-- Avoid generic phrases and clichés
-- Be ready to send as a PDF
 
 Job Description:
 ${jobDescription}
@@ -42,8 +46,7 @@ User Profile:
 - Email: ${userProfile.email || 'Not provided'}
 - Phone: ${userProfile.phone_number || 'Not provided'}
 - Address: ${userProfile.address || 'Not provided'}
-
-Return only the cover letter content, no extra commentary.`;
+`;
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -54,8 +57,8 @@ Return only the cover letter content, no extra commentary.`;
       body: JSON.stringify({
         model: 'gpt-4o-mini',
         messages: [
-          { role: 'system', content: 'You are a professional career counselor and cover letter expert. Generate high-quality, personalized cover letters that help candidates stand out.' },
-          { role: 'user', content: prompt }
+          { role: 'system', content: prompt },
+          { role: 'user', content: 'Generate the cover letter.' }
         ],
         temperature: 0.7,
         max_tokens: 1000,

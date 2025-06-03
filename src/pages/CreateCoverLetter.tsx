@@ -284,11 +284,21 @@ const CreateCoverLetter = () => {
             <CardContent>
               {generatedContent ? (
                 <div className="space-y-4">
-                  <Textarea
-                    value={generatedContent}
-                    onChange={(e) => setGeneratedContent(e.target.value)}
-                    className="min-h-[400px]"
-                  />
+                  <div className="relative">
+                    <Textarea
+                      value={generatedContent}
+                      onChange={(e) => setGeneratedContent(e.target.value)}
+                      className="min-h-[400px] pr-10"
+                    />
+                    <button
+                      type="button"
+                      className="absolute top-2 right-2 p-2 rounded hover:bg-gray-100"
+                      onClick={() => { navigator.clipboard.writeText(generatedContent); toast({ title: 'Copied!', description: 'Cover letter copied to clipboard.' }); }}
+                      aria-label="Copy to clipboard"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-gray-500"><path strokeLinecap="round" strokeLinejoin="round" d="M8 16h8a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm0 0v2a2 2 0 0 0 2 2h6" /></svg>
+                    </button>
+                  </div>
                   <Button onClick={handleSave} className="w-full">
                     Save Cover Letter
                   </Button>

@@ -47,8 +47,8 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white flex flex-col items-center justify-center px-6">
       <motion.div initial={{ opacity: 0, y: -40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="w-full max-w-3xl text-center mb-12">
-        <div className="mx-auto w-64 h-64 mb-6 flex items-center justify-center bg-blue-100 rounded-full">
-          <img src="https://www.svgrepo.com/show/528343/letter-unread.svg" alt="Cover Letter Hero" className="w-56 h-56 object-contain" onError={e => e.currentTarget.style.display='none'} />
+        <div className="mx-auto w-64 h-64 mb-6 flex items-center justify-center bg-blue-100 rounded-full overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1515168833906-d2a3b82b3029?auto=format&fit=crop&w=400&q=80" alt="Cover Letter Hero" className="w-64 h-64 object-cover" onError={e => e.currentTarget.style.display='none'} />
         </div>
         <h1 className="text-5xl font-extrabold text-blue-700 mb-4 drop-shadow-lg">Craft the Perfect Cover Letter</h1>
         <p className="text-xl text-gray-700 mb-6">AI-powered, beautiful, and tailored for your dream job. Make your application stand out with CoverCraft!</p>
@@ -63,17 +63,17 @@ const Index = () => {
         {/* How It Works Section with icons and animation */}
         <section className="bg-white rounded-xl shadow-lg p-8 grid md:grid-cols-3 gap-8">
           <div className="text-center flex flex-col items-center">
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/filetype-pdf.svg" alt="Upload Resume" className="w-16 h-16 mb-4" onError={e => e.currentTarget.style.display='none'} />
+            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=128&q=80" alt="Upload Resume" className="w-20 h-20 mb-4 rounded-lg object-cover" onError={e => e.currentTarget.style.display='none'} />
             <h3 className="text-xl font-semibold text-blue-700 mb-2">Upload Your Resume</h3>
             <p className="text-gray-600">Upload your CV or enter your experience. We'll extract your skills and achievements.</p>
           </div>
           <div className="text-center flex flex-col items-center">
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/briefcase.svg" alt="Paste Job Description" className="w-16 h-16 mb-4" onError={e => e.currentTarget.style.display='none'} />
+            <img src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=128&q=80" alt="Paste Job Description" className="w-20 h-20 mb-4 rounded-lg object-cover" onError={e => e.currentTarget.style.display='none'} />
             <h3 className="text-xl font-semibold text-blue-700 mb-2">Paste Job Description</h3>
             <p className="text-gray-600">Paste the job description. Our AI will analyze and match your profile to the role.</p>
           </div>
           <div className="text-center flex flex-col items-center">
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/download.svg" alt="Download PDF" className="w-16 h-16 mb-4" onError={e => e.currentTarget.style.display='none'} />
+            <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=128&q=80" alt="Download PDF" className="w-20 h-20 mb-4 rounded-lg object-cover" onError={e => e.currentTarget.style.display='none'} />
             <h3 className="text-xl font-semibold text-blue-700 mb-2">Download & Apply</h3>
             <p className="text-gray-600">Get a beautiful, ready-to-send PDF cover letter. Download and apply with confidence!</p>
           </div>
