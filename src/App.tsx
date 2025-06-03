@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -13,6 +12,7 @@ import NotFound from "./pages/NotFound";
 import CreateCoverLetter from "./pages/CreateCoverLetter";
 import CoverLetters from "./pages/CoverLetters";
 import Profile from "./pages/Profile";
+import CoverLetterDetail from "./pages/CoverLetterDetail";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +55,14 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <Profile />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/cover-letter/:id" 
+              element={
+                <ProtectedRoute>
+                  <CoverLetterDetail />
                 </ProtectedRoute>
               } 
             />
