@@ -22,7 +22,7 @@ serve(async (req) => {
 - Be laser-focused on the specific job and company, making the candidate seem like a perfect fit
 - Strongly connect the candidate's experience and skills to the position, even exaggerating alignment if needed
 - Highlight only the most relevant achievements and skills for this job
-- Be no longer than 250 words (short, punchy, and memorable)
+- Be no longer than 200 words (short, punchy, and memorable) - important!
 - Use a confident, enthusiastic, and proactive tone
 - Avoid generic phrases, clichés, and unnecessary background
 - Make the candidate stand out as the ideal hire for this role

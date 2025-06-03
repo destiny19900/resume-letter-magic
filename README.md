@@ -1,59 +1,67 @@
-# Welcome to your Cover Craft project
+# Cover Craft
 
-## Project info
+**AI-powered cover letter generator.**
 
-**URL**: [https://lovable.dev/projects/4aa913bb-ddd1-4b3e-a121-ae838c31c33a](https://preview--resume-letter-magic.lovable.app/)
+Cover Craft helps you create modern, highly tailored, and professional cover letters in seconds using AI. Upload your resume, paste a job description, and get a ready-to-send PDF cover letter that makes you stand out.
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## 🚀 Features
+- AI-powered, job-specific cover letter generation
+- Resume upload and parsing
+- Save, edit, and download your cover letters as PDF
+- Dashboard to manage your documents
+- Beautiful, modern UI (React, Tailwind, shadcn-ui)
 
+---
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🛠️ Installation
 
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+**Requirements:** Node.js (18+ recommended), npm
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# 1. Clone the repository
+ git clone <YOUR_GIT_URL>
+ cd covercraft
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# 2. Install dependencies
+ npm install
 
-# Step 3: Install the necessary dependencies.
-npm i
+# 3. Set up environment variables
+ cp .env.example .env
+# Edit .env and add your Supabase and OpenAI keys
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+# 4. Start the development server
+ npm run dev
 ```
 
-**Edit a file directly in GitHub**
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 🤝 License & Contributing
 
-**Use GitHub Codespaces**
+Cover Craft is open source and welcomes contributions!
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- **License:** MIT
+- **Contributing:**
+  - Fork this repo
+  - Add your features or improvements
+  - Open a pull request (PR)
+  - I will review and merge great contributions!
 
-## What technologies are used for this project?
+Feel free to suggest features, report bugs, or ask questions via issues or PRs.
 
-This project is built with:
+---
 
+## 🧑‍💻 Tech Stack
 - Vite
 - TypeScript
 - React
 - shadcn-ui
 - Tailwind CSS
+- Supabase
+- OpenAI
+
+---
+
+**Happy building!**
 
