@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -123,7 +122,7 @@ const CoverLetters = () => {
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {coverLetters.map((letter) => (
-              <Card key={letter.id} className="hover:shadow-lg transition-shadow">
+              <Card key={letter.id} className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate(`/cover-letter/${letter.id}`)}>
                 <CardHeader>
                   <CardTitle className="text-lg">{letter.title}</CardTitle>
                   <div className="text-sm text-gray-600">
@@ -140,18 +139,18 @@ const CoverLetters = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => navigate(`/edit-cover-letter/${letter.id}`)}
+                      onClick={e => { e.stopPropagation(); handleDelete(letter.id); }}
                     >
-                      <Edit className="w-4 h-4 mr-1" />
-                      Edit
+                      <Trash2 className="w-4 h-4 mr-1" />
+                      Delete
                     </Button>
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => handleDelete(letter.id)}
+                      onClick={e => { e.stopPropagation(); navigator.clipboard.writeText(letter.content); toast({ title: 'Copied!', description: 'Cover letter copied to clipboard.' }); }}
                     >
-                      <Trash2 className="w-4 h-4 mr-1" />
-                      Delete
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-1"><path strokeLinecap="round" strokeLinejoin="round" d="M8 16h8a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2zm0 0v2a2 2 0 0 0 2 2h6" /></svg>
+                      Copy
                     </Button>
                   </div>
                 </CardContent>

@@ -152,7 +152,7 @@ const Dashboard = () => {
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {coverLetters.slice(0, 6).map((letter) => (
-                <Card key={letter.id} className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate(`/edit-cover-letter/${letter.id}`)}>
+                <Card key={letter.id} className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate(`/cover-letter/${letter.id}`)}>
                   <div className="p-4">
                     <div className="font-semibold text-lg">{letter.title}</div>
                     <div className="text-gray-600 text-sm">{letter.company_name} {letter.position_title && `- ${letter.position_title}`}</div>
